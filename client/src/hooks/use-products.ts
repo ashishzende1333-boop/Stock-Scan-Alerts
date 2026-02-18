@@ -130,3 +130,52 @@ export function useDeleteProduct() {
     },
   });
 }
+
+
+
+export function useTransactions() {
+  return useQuery({
+    queryKey: ['transactions'],
+    queryFn: async () => {
+      const res = await fetch('/api/transactions', { credentials: "include" });
+      if (!res.ok) throw new Error("Failed to fetch transactions");
+      return res.json();
+    },
+  });
+}
+
+export function useCreateTransaction() {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: async (data: {
+      productId: number;
+      quantity: number;
+      type: 'IN' | 'OUT' | 'ADJUST';
+      notes?: string;
+    }) => {
+      const res = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+
+      if (!res.ok) throw new Error("Failed to create transaction");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      queryClient.invalidateQueries({ queryKey: [api.products.list.path] });
+      toast({ title: "Transaction Recorded", description: "Stock movement saved." });
+    },
+    onError: (error) => {
+      toast({ 
+        title: "Transaction Failed", 
+        description: error.message, 
+        variant: "destructive" 
+      });
+    },
+  });
+}
