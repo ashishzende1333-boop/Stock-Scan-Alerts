@@ -1,11 +1,14 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertProductSchema } from "@shared/routes";
+import { api } from "@shared/routes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { z } from "zod";
+
+// Get the schema from api
+const insertProductSchema = api.products.create.input;
 
 type ProductFormProps = {
   defaultValues?: Partial<z.infer<typeof insertProductSchema>>;
@@ -134,8 +137,10 @@ export function ProductForm({ defaultValues, onSubmit, isLoading, onCancel }: Pr
         </div>
 
         <div className="flex justify-end gap-3 pt-4 border-t">
-          <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
-          <Button type="submit" disabled={isLoading} className="bg-primary hover:bg-primary/90 text-primary-foreground">
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button type="submit" disabled={isLoading}>
             {isLoading ? "Saving..." : "Save Product"}
           </Button>
         </div>
