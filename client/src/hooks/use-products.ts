@@ -50,14 +50,14 @@ export function useCreateProduct() {
     mutationFn: async (data: InsertProduct) => {
       // Validate with schema first
       const validated = api.products.create.input.parse(data);
-      
+
       const res = await fetch(api.products.create.path, {
         method: api.products.create.method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(validated),
         credentials: "include",
       });
-      
+
       if (!res.ok) {
         if (res.status === 400) {
           const error = await res.json();
@@ -89,14 +89,14 @@ export function useUpdateProduct() {
     mutationFn: async ({ id, ...updates }: { id: number } & Partial<InsertProduct>) => {
       const validated = api.products.update.input.parse(updates);
       const url = buildUrl(api.products.update.path, { id });
-      
+
       const res = await fetch(url, {
         method: api.products.update.method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(validated),
         credentials: "include",
       });
-      
+
       if (!res.ok) throw new Error("Failed to update product");
       return api.products.update.responses[200].parse(await res.json());
     },
@@ -131,7 +131,7 @@ export function useDeleteProduct() {
   });
 }
 
-
+// ============ TRANSACTION HOOKS ============
 
 export function useTransactions() {
   return useQuery({
