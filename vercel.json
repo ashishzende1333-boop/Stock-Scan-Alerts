@@ -1,9 +1,11 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": ".",
+  "outputDirectory": "dist/public",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "routes": [
-    { "src": "/", "dest": "/test.html" }
+    { "src": "/assets/(.*)", "dest": "/assets/$1" },
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/index.html" }
   ]
 }
