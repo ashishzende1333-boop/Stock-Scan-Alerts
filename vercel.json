@@ -3,11 +3,6 @@
   "outputDirectory": "dist/public",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "functions": {
-    "api/index.js": {
-      "runtime": "nodejs@20.x"
-    }
-  },
   "routes": [
     { "src": "/assets/(.*)", "dest": "/assets/$1" },
     { "handle": "filesystem" },
