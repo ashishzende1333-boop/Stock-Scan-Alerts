@@ -3,9 +3,15 @@
   "outputDirectory": "dist/public",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
+  "functions": {
+    "api/*": {
+      "runtime": "nodejs20.x"
+    }
+  },
   "routes": [
     { "src": "/assets/(.*)", "dest": "/assets/$1" },
     { "handle": "filesystem" },
+    { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/.*", "dest": "/index.html" }
   ]
 }
