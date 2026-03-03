@@ -64,7 +64,7 @@ app.use((req, res, next) => {
   next();
 });
 
-(async () => {
+export const setupPromise = (async () => {
   await registerRoutes(httpServer, app);
 
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
@@ -86,9 +86,11 @@ app.use((req, res, next) => {
     const { setupVite } = await import("./vite");
     await setupVite(httpServer, app);
   }
+})();
 
-  // --- FIX 2: Wrap the listen block to prevent port binding in serverless ---
-  if (process.env.NODE_ENV !== 'production') {
+// --- FIX 2: Wrap the listen block to prevent port binding in serverless ---
+if (process.env.NODE_ENV !== 'production') {
+  setupPromise.then(() => {
     const port = parseInt(process.env.PORT || "5000", 10);
     httpServer.listen({
       port,
@@ -97,8 +99,8 @@ app.use((req, res, next) => {
     }, () => {
       log(`serving on port ${port}`);
     });
-  }
-})();
+  });
+}
 
 // --- FIX 3: Correct CommonJS export (this is what your build script expects) ---
-module.exports = app;
+export default app;

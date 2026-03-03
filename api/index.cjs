@@ -1,8 +1,8 @@
-// api/index.js
-let app;
+// api/index.cjs
+let serverModule;
 try {
   // Try to load the compiled server
-  app = require('../server/index.js');
+  serverModule = require('../dist/index.cjs');
   console.log("✅ Server loaded successfully");
 } catch (error) {
   console.error("❌ Failed to load server:", error);
@@ -14,8 +14,16 @@ try {
       stack: error.stack
     });
   };
-  return;
 }
 
-// Export the loaded app
-module.exports = app;
+if (serverModule) {
+  const app = serverModule.default || serverModule;
+  const setupPromise = serverModule.setupPromise;
+
+  module.exports = async (req, res) => {
+    if (setupPromise) {
+      await setupPromise;
+    }
+    return app(req, res);
+  };
+}
