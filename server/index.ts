@@ -17,7 +17,7 @@ app.use(
     verify: (req, _res, buf) => {
       req.rawBody = buf;
     },
-  }),
+  })
 );
 
 app.use(express.urlencoded({ extended: false }));
@@ -92,7 +92,7 @@ app.use((req, res, next) => {
   // For local development
   if (process.env.NODE_ENV !== 'production') {
     const port = parseInt(process.env.PORT || "5000", 10);
-    httpsServer.listen({
+    httpServer.listen({
       port,
       host: "0.0.0.0",
       reusePort: true,
@@ -100,22 +100,7 @@ app.use((req, res, next) => {
       log(`serving on port ${port}`);
     });
   }
+})();
 
-  // For Vercel serverless - export the app
-  export default app;
-
-
-  // Export the app for Vercel serverless
-export default app;
-
-// Only listen in development (not on Vercel)
-if (process.env.NODE_ENV !== 'production') {
-  const port = parseInt(process.env.PORT || "5000", 10);
-  httpServer.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    console.log(`Server running on port ${port}`);
-  });
-}
+// For Vercel serverless - export as CommonJS (required for esbuild)
+module.exports = app;
