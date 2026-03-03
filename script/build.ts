@@ -58,6 +58,10 @@ async function buildAll() {
     minify: true,
     external: externals,
     logLevel: "info",
+    // Add this to handle ES modules correctly
+    banner: {
+      js: "import { createRequire } from 'module'; const require = createRequire(import.meta.url);",
+    },
   });
 }
 

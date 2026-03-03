@@ -22,7 +22,8 @@ app.use(
 
 app.use(express.urlencoded({ extended: false }));
 
-export function log(message: string, source = "express") {
+// Remove 'export' keyword - make it a regular function for CommonJS
+function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "2-digit",
@@ -102,5 +103,5 @@ app.use((req, res, next) => {
   }
 })();
 
-// For Vercel serverless - export as CommonJS (required for esbuild)
+// Export for CommonJS (Vercel serverless)
 module.exports = app;
