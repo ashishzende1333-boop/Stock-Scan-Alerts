@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { insertProductSchema, insertTransactionSchema, products, transactions } from './schema';
 
+export * from './schema';
+
 export const errorSchemas = {
   validation: z.object({
     message: z.string(),
