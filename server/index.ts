@@ -22,7 +22,7 @@ app.use(
 
 app.use(express.urlencoded({ extended: false }));
 
-// Remove 'export' keyword - make it a regular function for CommonJS
+// --- FIX 1: 'export' removed for CommonJS compatibility ---
 function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
     hour: "numeric",
@@ -52,7 +52,6 @@ app.use((req, res, next) => {
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
-
       log(logLine);
     }
   });
@@ -76,9 +75,6 @@ app.use((req, res, next) => {
     return res.status(status).json({ message });
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
   if (process.env.NODE_ENV === "production") {
     serveStatic(app);
   } else {
@@ -86,11 +82,7 @@ app.use((req, res, next) => {
     await setupVite(httpServer, app);
   }
 
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  // For local development
+  // --- FIX 2: Wrap the listen block to prevent port binding in serverless ---
   if (process.env.NODE_ENV !== 'production') {
     const port = parseInt(process.env.PORT || "5000", 10);
     httpServer.listen({
@@ -103,5 +95,5 @@ app.use((req, res, next) => {
   }
 })();
 
-// Export for CommonJS (Vercel serverless)
+// --- FIX 3: Correct CommonJS export (this is what your build script expects) ---
 module.exports = app;
