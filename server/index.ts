@@ -92,7 +92,7 @@ app.use((req, res, next) => {
   // For local development
   if (process.env.NODE_ENV !== 'production') {
     const port = parseInt(process.env.PORT || "5000", 10);
-    httpsServer.listen({
+    httpServer.listen({
       port,
       host: "0.0.0.0",
       reusePort: true,
@@ -100,6 +100,7 @@ app.use((req, res, next) => {
       log(`serving on port ${port}`);
     });
   }
+})();
 
-  // For Vercel serverless - export the app
-  export default app;
+// For Vercel serverless - export the app
+export default app;
