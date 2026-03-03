@@ -103,3 +103,19 @@ app.use((req, res, next) => {
 
   // For Vercel serverless - export the app
   export default app;
+
+
+  // Export the app for Vercel serverless
+export default app;
+
+// Only listen in development (not on Vercel)
+if (process.env.NODE_ENV !== 'production') {
+  const port = parseInt(process.env.PORT || "5000", 10);
+  httpServer.listen({
+    port,
+    host: "0.0.0.0",
+    reusePort: true,
+  }, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}

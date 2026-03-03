@@ -1,3 +1,4 @@
+export * from './schema';
 import { z } from 'zod';
 import { insertProductSchema, insertTransactionSchema, products, transactions } from './schema';
 
