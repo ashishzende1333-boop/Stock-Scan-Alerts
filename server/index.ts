@@ -6,6 +6,11 @@ import { createServer } from "http";
 const app = express();
 const httpServer = createServer(app);
 
+// Test route
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'API is working!' });
+}); 
+
 declare module "http" {
   interface IncomingMessage {
     rawBody: unknown;
