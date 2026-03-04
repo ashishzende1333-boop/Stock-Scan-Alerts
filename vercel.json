@@ -1,8 +1,7 @@
 {
-  "builds": [
-    {
-      "src": "api/index.cjs",
-      "use": "@vercel/node"
+  "functions": {
+    "api/hello.js": {
+      "runtime": "nodejs20.x"
     }
-  ]
+  }
 }
