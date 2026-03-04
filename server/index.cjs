@@ -1,15 +1,10 @@
-import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
-import { serveStatic } from "./static";
-import { createServer } from "http";
+const express = require("express");
+const { registerRoutes } = require("./routes");
+const { serveStatic } = require("./static");
+const { createServer } = require("http");
 
 const app = express();
 const httpServer = createServer(app);
-
-// Test route
-app.get('/api/test', (req, res) => {
-  res.json({ message: 'API is working!' });
-}); 
 
 declare module "http" {
   interface IncomingMessage {
@@ -27,7 +22,6 @@ app.use(
 
 app.use(express.urlencoded({ extended: false }));
 
-// --- FIX 1: 'export' removed for CommonJS compatibility ---
 function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
     hour: "numeric",
@@ -57,6 +51,7 @@ app.use((req, res, next) => {
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
+
       log(logLine);
     }
   });
@@ -64,7 +59,7 @@ app.use((req, res, next) => {
   next();
 });
 
-export const setupPromise = (async () => {
+(async () => {
   await registerRoutes(httpServer, app);
 
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
@@ -86,11 +81,8 @@ export const setupPromise = (async () => {
     const { setupVite } = await import("./vite");
     await setupVite(httpServer, app);
   }
-})();
 
-// --- FIX 2: Wrap the listen block to prevent port binding in serverless ---
-if (process.env.NODE_ENV !== 'production') {
-  setupPromise.then(() => {
+  if (process.env.NODE_ENV !== 'production') {
     const port = parseInt(process.env.PORT || "5000", 10);
     httpServer.listen({
       port,
@@ -99,8 +91,8 @@ if (process.env.NODE_ENV !== 'production') {
     }, () => {
       log(`serving on port ${port}`);
     });
-  });
-}
+  }
+})();
 
-// --- FIX 3: Correct CommonJS export (this is what your build script expects) ---
-export default app;
+// ✅ EXPORT FOR COMMONJS (THIS IS THE IMPORTANT LINE)
+module.exports = app;
