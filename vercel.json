@@ -1,7 +1,5 @@
 {
-  "functions": {
-    "api/hello.js": {
-      "runtime": "nodejs20.x"
-    }
-  }
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/public",
+  "installCommand": "npm install"
 }
